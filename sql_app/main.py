@@ -91,13 +91,13 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-@app.get("/")
-def main():
-    return RedirectResponse(url="/docs/")
-
-@app.get("/closeprice/", response_model=schemas.ClosePrice)
+@app.get("/api/closeprice/", response_model=schemas.ClosePrice)
 def read_user(symbol: str,timestamp: str, db: Session = Depends(get_db)):
     db_closeprice = crud.get_close_price_by_symbol_and_date(db, symbol=symbol, timestamp=timestamp)
     if db_closeprice is None:
         raise HTTPException(status_code=404, detail="Close Price not found for the given date")
     return db_closeprice
+
+@app.get("/api")
+async def root():
+    return { "message": "Stock Market Explorer"}
