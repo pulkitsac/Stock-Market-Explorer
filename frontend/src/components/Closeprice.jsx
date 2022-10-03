@@ -4,7 +4,6 @@ const Getprice = () => {
     const [symbol, setSymbol] = useState("");
     const [close, setClose] = useState("");
     const [timestamp, setTime] = useState("");
-    const [isin, setIsin] = useState("");
     const [message, setMessage] = useState("");
 
   let handleSubmit = async (e) => {
@@ -29,7 +28,7 @@ const Getprice = () => {
       let resJson = await res.json();
       if (res.status === 200) {
         console.log(resJson);
-        setMessage("User created successfully");
+        setMessage("Close Price found successfully");
         setClose(resJson.close);
         setSymbol(resJson.symbol);
         setTime(resJson.timestamp);
@@ -59,9 +58,9 @@ const Getprice = () => {
           onChange={(e) => setTime(e.target.value)}
         />
 
-        <button type="submit">Create</button>
+        <button type="submit">Get Close</button>
 
-        <div className="message">{message ? <p>{symbol}{close}{timestamp}</p> : null }</div>
+        <div className="message">{message ? <p>{message} {close}</p> : null }</div>
       </form>
     </div>
   );
