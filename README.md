@@ -20,4 +20,5 @@ To run the app -
 
 For now, in the main branch -  implementation of loading only one file has been done, hence we get a correct response only when we query for the data of that date the case here being 16-SEP-2022.
 
-The issue to load multiple files has been done in another branch which has not been pushed. I am still stuck in resolving another issue which has occured after the database one.
+The issue to load multiple files has been done in another branch which has not been pushed. 
+Another issue regarding incorrect API response has occured. I am working on the CRUD operations to get the correct response.
