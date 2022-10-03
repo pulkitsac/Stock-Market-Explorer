@@ -32,7 +32,6 @@ import pandas as pd
 
 
 #models.Base.metadata.create_all(bind=engine)
-db = SessionLocal()
 
 
 # with open("/Users/pulkitsachan/Desktop/Stock-Market-Explorer/cm16Sep2022bhav.csv", "r") as f:
@@ -62,26 +61,27 @@ import os
 import glob
 #import chardet
 
-os.chdir('/Users/pulkitsachan/Desktop/Stock-Market-Explorer/')
+path = os.getcwd();
+
+# os.chdir('/Users/pulkitsachan/Desktop/Stock-Market-Explorer/')
 extension = 'csv'
 all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
 print (all_filenames)
 
 tablename = models.closeprice.__tablename__
 
-#print (tablename)
-#change range to len all_filename
-for i in range(1):
+for i in range(len(all_filenames)):
     with open(all_filenames[i], 'r') as f:
         #result = chardet.detect(f.read())
         df = pd.read_csv(all_filenames[i],usecols = [0,5,10,12],header=0)
-        df.to_sql(tablename,con=engine,index=False,if_exists='append')
+        #print(c)
+        #Change data type of date from str to date format and use query to get result
+        df.to_sql(tablename,con=engine,index=True,if_exists='append')
         query = sqlalchemy.update(models.closeprice).where(models.closeprice.DataSource==None).values(DataSource=all_filenames[i])
         connection.execute(query)
 
 
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.responses import RedirectResponse
 
 app.add_middleware(
     CORSMiddleware,
@@ -91,9 +91,13 @@ app.add_middleware(
     allow_credentials=True,
 )
 
+#TODOS - SEE WHAT format crud uses in date type and use library to interpret useri
+
+
 @app.get("/api/closeprice/", response_model=schemas.ClosePrice)
-def read_user(symbol: str,timestamp: str, db: Session = Depends(get_db)):
-    db_closeprice = crud.get_close_price_by_symbol_and_date(db, symbol=symbol, timestamp=timestamp)
+def get_close(symbol: str,timestamp: str, db: Session = Depends(get_db)):
+    db_closeprice = crud.get_close_price_by_symbol_and_date(db,symbol=symbol,timestamp=timestamp)
+    print (db_closeprice)
     if db_closeprice is None:
         raise HTTPException(status_code=404, detail="Close Price not found for the given date")
     return db_closeprice
