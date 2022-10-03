@@ -22,3 +22,5 @@ For now, in the main branch -  implementation of loading only one file has been 
 
 The issue to load multiple files has been done in another branch which has not been pushed. 
 Another issue regarding incorrect API response has occured. I am working on the CRUD operations to get the correct response.
+
+Update  - Getting the correct response from API now. Working on getting the right output at frontend now.
