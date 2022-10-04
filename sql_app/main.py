@@ -6,7 +6,6 @@ from numpy import DataSource
 from sqlalchemy.orm import Session
 from datetime import date
 
-import datetime
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
@@ -97,6 +96,14 @@ app.add_middleware(
 @app.get("/api/closeprice/", response_model=schemas.ClosePrice)
 def get_close(symbol: str,timestamp: str, db: Session = Depends(get_db)):
     db_closeprice = crud.get_close_price_by_symbol_and_date(db,symbol=symbol,timestamp=timestamp)
+    print (db_closeprice)
+    if db_closeprice is None:
+        raise HTTPException(status_code=404, detail="Close Price not found for the given date")
+    return db_closeprice
+
+@app.get("/api/closeprice/range/", response_model=List[schemas.ClosePrice])
+def get_close_range(symbol: str,timestamp1: str,timestamp2: str,db: Session = Depends(get_db)):
+    db_closeprice = crud.get_close_price_by_symbol_and_daterange(db,symbol=symbol,timestamp1=timestamp1,timestamp2=timestamp2)
     print (db_closeprice)
     if db_closeprice is None:
         raise HTTPException(status_code=404, detail="Close Price not found for the given date")
